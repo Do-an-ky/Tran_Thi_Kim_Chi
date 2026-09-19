@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Danh sách sinh viên
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+
+    <style>
+
+        /* ==================================================
+           CHUNG
+        ================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body,
+        button,
+        a,
+        table,
+        input,
+        select {
+            font-family:
+                "Segoe UI",
+                Tahoma,
+                Arial,
+                sans-serif !important;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f9;
+            color: #172033;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+
+        .teacher-list-page {
+            min-height: 100vh;
+        }
+
+
+        .teacher-list-container {
+            width: min(
+                1180px,
+                calc(100% - 40px)
+            );
+
+            margin: 0 auto;
+
+            padding:
+                24px
+                0
+                60px;
+        }
+
+
+        /* ==================================================
+           THANH TRÊN
+        ================================================== */
+
+        .top-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 16px;
+
+            margin-bottom: 24px;
+        }
+
+
+        .back-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            min-height: 42px;
+
+            padding:
+                10px
+                14px;
+
+            border:
+                1px solid
+                #dfe5ed;
+
+            border-radius: 9px;
+
+            background: #ffffff;
+
+            color: #4c596d;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+
+        .back-button:hover {
+
+            color: #df3545;
+
+            border-color: #df3545;
+
+            background: #fffafa;
+        }
+
+
+        .logout-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 42px;
+
+            padding:
+                10px
+                18px;
+
+            border-radius: 9px;
+
+            background: #df3545;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+
+        .logout-button:hover {
+            background: #c92d3c;
+        }
+
+
+        /* ==================================================
+           THÔNG TIN LỚP
+        ================================================== */
+
+        .class-header {
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                #e0e6ed;
+
+            border-radius: 16px;
+
+            padding:
+                26px
+                28px;
+
+            margin-bottom: 24px;
+        }
+
+
+        .class-header h1 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 28px;
+
+            line-height: 1.3;
+
+            font-weight: 700;
+
+            color: #111827;
+        }
+
+
+        .class-code {
+            color: #df3545;
+        }
+
+
+        .class-header p {
+
+            margin: 0;
+
+            color: #697586;
+
+            font-size: 15px;
+        }
+
+
+        /* ==================================================
+           ACCORDION
+        ================================================== */
+
+        .filter-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 14px;
+        }
+
+
+        .filter-section {
+            width: 100%;
+        }
+
+
+        .filter-bar {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 16px;
+
+            min-height: 68px;
+
+            padding:
+                16px
+                20px;
+
+            border:
+                1px solid
+                #dce3eb;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            color: #172033;
+
+            cursor: pointer;
+
+            text-align: left;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+
+        .filter-bar:hover {
+
+            background: #ffffff;
+
+            border-color: #cbd4df;
+        }
+
+
+        .filter-bar.active {
+
+            background: #ffffff;
+
+            border-color: #df3545;
+
+            border-bottom-left-radius: 0;
+
+            border-bottom-right-radius: 0;
+        }
+
+
+        .filter-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            min-width: 0;
+        }
+
+
+        .filter-arrow {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 18px;
+
+            flex-shrink: 0;
+
+            color: #5d687a;
+
+            font-size: 14px;
+        }
+
+
+        .filter-count {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 42px;
+
+            min-height: 32px;
+
+            padding:
+                4px
+                10px;
+
+            border-radius: 999px;
+
+            background: #e9edf3;
+
+            color: #46546a;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            flex-shrink: 0;
+        }
+
+
+        .filter-bar.active
+        .filter-count {
+
+            background: #fde8eb;
+
+            color: #c62f3e;
+        }
+
+
+        /* ==================================================
+           PANEL DANH SÁCH
+        ================================================== */
+
+        .panel-slot {
+            width: 100%;
+        }
+
+
+        .student-panel {
+
+            display: none;
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                #df3545;
+
+            border-top: 0;
+
+            border-bottom-left-radius:
+                12px;
+
+            border-bottom-right-radius:
+                12px;
+
+            overflow: hidden;
+        }
+
+
+        .student-panel.open {
+            display: block;
+        }
+
+
+        .panel-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 16px;
+
+            padding:
+                18px
+                20px;
+
+            border-bottom:
+                1px solid
+                #e6ebf0;
+        }
+
+
+        .panel-title {
+
+            margin-bottom: 4px;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #172033;
+        }
+
+
+        .panel-description {
+
+            color: #758094;
+
+            font-size: 14px;
+        }
+
+
+        /* ==================================================
+           BẢNG
+        ================================================== */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        .student-table {
+
+            width: 100%;
+
+            min-width: 900px;
+
+            border-collapse: collapse;
+        }
+
+
+        .student-table thead {
+
+            background: #f7f9fb;
+        }
+
+
+        .student-table th {
+
+            padding:
+                14px
+                16px;
+
+            text-align: left;
+
+            color: #657185;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            border-bottom:
+                1px solid
+                #e5e9ef;
+
+            white-space: nowrap;
+        }
+
+
+        .student-table td {
+
+            padding:
+                15px
+                16px;
+
+            border-bottom:
+                1px solid
+                #edf0f4;
+
+            vertical-align: middle;
+
+            font-size: 14px;
+        }
+
+
+        .student-table tbody
+        tr:last-child
+        td {
+
+            border-bottom: 0;
+        }
+
+
+        .student-table tbody
+        tr:hover {
+
+            background: #fafbfc;
+        }
+
+
+        .student-code {
+
+            color: #245cc6;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+
+        .student-name {
+            font-weight: 600;
+        }
+
+
+        .progress-main {
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            color: #172033;
+        }
+
+
+        .progress-detail {
+
+            margin-top: 3px;
+
+            color: #798397;
+
+            font-size: 12px;
+        }
+
+
+        /* ==================================================
+           BADGE
+        ================================================== */
+
+        .badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding:
+                6px
+                10px;
+
+            border-radius: 999px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .badge-success {
+
+            background: #def3e8;
+
+            color: #26704d;
+        }
+
+
+        .badge-warning {
+
+            background: #fff0c9;
+
+            color: #946700;
+        }
+
+
+        .badge-danger {
+
+            background: #fde1e5;
+
+            color: #b62f3d;
+        }
+
+
+        .badge-neutral {
+
+            background: #e9edf2;
+
+            color: #5b687c;
+        }
+
+
+        /* ==================================================
+           NÚT XEM
+        ================================================== */
+
+        .view-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 64px;
+
+            min-height: 36px;
+
+            padding:
+                8px
+                13px;
+
+            border-radius: 8px;
+
+            background: #df3545;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .view-button:hover {
+            background: #c92d3c;
+        }
+
+
+        /* ==================================================
+           PHÂN TRANG
+        ================================================== */
+
+        .pagination {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            padding:
+                18px
+                20px;
+
+            border-top:
+                1px solid
+                #e7ebf0;
+        }
+
+
+        .page-button {
+
+            min-width: 38px;
+
+            height: 38px;
+
+            padding: 0 10px;
+
+            border:
+                1px solid
+                #dbe1e8;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #4b586c;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .page-button:hover:not(
+            :disabled
+        ) {
+
+            color: #df3545;
+
+            border-color: #df3545;
+        }
+
+
+        .page-button.active {
+
+            color: #ffffff;
+
+            background: #df3545;
+
+            border-color: #df3545;
+        }
+
+
+        .page-button:disabled {
+
+            opacity: 0.4;
+
+            cursor: default;
+        }
+
+
+        /* ==================================================
+           EMPTY
+        ================================================== */
+
+        .empty-message {
+
+            display: none;
+
+            padding:
+                34px
+                20px;
+
+            text-align: center;
+
+            color: #758094;
+
+            font-size: 14px;
+        }
+
+
+        /* ==================================================
+           MOBILE
+        ================================================== */
+
+        @media (
+            max-width: 720px
+        ) {
+
+            .teacher-list-container {
+
+                width:
+                    calc(
+                        100% - 24px
+                    );
+
+                padding-top: 16px;
+            }
+
+
+            .top-actions {
+
+                align-items:
+                    stretch;
+            }
+
+
+            .back-button,
+            .logout-button {
+
+                font-size: 13px;
+            }
+
+
+            .class-header {
+
+                padding:
+                    20px
+                    18px;
+            }
+
+
+            .class-header h1 {
+                font-size: 22px;
+            }
+
+
+            .filter-bar {
+
+                min-height: 62px;
+
+                padding:
+                    14px
+                    15px;
+
+                font-size: 14px;
+            }
+
+
+            .filter-count {
+
+                min-width: 36px;
+
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="teacher-list-page">
+
+
+    <main class="teacher-list-container">
+
+
+        <!-- ==================================================
+             THANH TRÊN
+        ================================================== -->
+
+        <div class="top-actions">
+
+
+            <a
+                href="/giangvien"
+                class="back-button"
+            >
+                ← Quay lại trang chủ GVCN
+            </a>
+
+
+            <a
+                href="/logout"
+                class="logout-button"
+            >
+                Đăng xuất
+            </a>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             TRƯỜNG HỢP CHƯA CHỌN LỚP
+        ================================================== -->
+
+        <% if (!maLopDangChon) { %>
+
+
+            <section class="class-header">
+
+                <h1>
+                    Danh sách sinh viên
+                </h1>
+
+                <p>
+                    Chưa chọn lớp cần theo dõi.
+                    Vui lòng quay lại trang GVCN và chọn một lớp.
+                </p>
+
+            </section>
+
+
+        <% } else { %>
+
+
+            <!-- ==================================================
+                 THÔNG TIN LỚP
+            ================================================== -->
+
+            <section class="class-header">
+
+
+                <h1>
+
+                    Danh sách sinh viên
+
+                    <span class="class-code">
+
+                        <%= maLopDangChon %>
+
+                    </span>
+
+                </h1>
+
+
+                <p>
+
+                    Năm học 2025-2026
+
+                    •
+
+                    <strong>
+
+                        <%= thongKe.tatCa %>
+
+                    </strong>
+
+                    sinh viên
+
+                </p>
+
+
+            </section>
+
+
+            <!-- ==================================================
+                 DANH SÁCH BỘ LỌC
+            ================================================== -->
+
+            <div class="filter-list">
+
+
+                <!-- ==============================================
+                     TẤT CẢ
+                =============================================== -->
+
+                <section
+                    class="filter-section"
+                >
+
+
+                    <button
+                        type="button"
+                        class="filter-bar"
+                        data-filter="TAT_CA"
+                    >
+
+
+                        <span class="filter-left">
+
+
+                            <span
+                                class="filter-arrow"
+                            >
+                                ▶
+                            </span>
+
+
+                            <span>
+                                Tất cả sinh viên
+                            </span>
+
+
+                        </span>
+
+
+                        <span
+                            class="filter-count"
+                        >
+                            <%= thongKe.tatCa %>
+                        </span>
+
+
+                    </button>
+
+
+                    <div
+                        class="panel-slot"
+                    >
+                    </div>
+
+
+                </section>
+
+
+                <!-- ==============================================
+                     CÓ CẢNH BÁO
+                =============================================== -->
+
+                <section
+                    class="filter-section"
+                >
+
+
+                    <button
+                        type="button"
+                        class="filter-bar"
+                        data-filter="CANH_BAO"
+                    >
+
+
+                        <span class="filter-left">
+
+
+                            <span
+                                class="filter-arrow"
+                            >
+                                ▶
+                            </span>
+
+
+                            <span>
+                                Sinh viên có cảnh báo
+                            </span>
+
+
+                        </span>
+
+
+                        <span
+                            class="filter-count"
+                        >
+                            <%= thongKe.coCanhBao %>
+                        </span>
+
+
+                    </button>
+
+
+                    <div
+                        class="panel-slot"
+                    >
+                    </div>
+
+
+                </section>
+
+
+                <!-- ==============================================
+                     CÓ MÔN CHƯA ĐẠT
+                =============================================== -->
+
+                <section
+                    class="filter-section"
+                >
+
+
+                    <button
+                        type="button"
+                        class="filter-bar"
+                        data-filter="CHUA_DAT"
+                    >
+
+
+                        <span class="filter-left">
+
+
+                            <span
+                                class="filter-arrow"
+                            >
+                                ▶
+                            </span>
+
+
+                            <span>
+                                Sinh viên có học phần chưa đạt
+                            </span>
+
+
+                        </span>
+
+
+                        <span
+                            class="filter-count"
+                        >
+                            <%= thongKe.coMonChuaDat %>
+                        </span>
+
+
+                    </button>
+
+
+                    <div
+                        class="panel-slot"
+                    >
+                    </div>
+
+
+                </section>
+
+
+                <!-- ==============================================
+                     ĐẠT HIỆN TẠI
+                =============================================== -->
+
+                <section
+                    class="filter-section"
+                >
+
+
+                    <button
+                        type="button"
+                        class="filter-bar"
+                        data-filter="DAT"
+                    >
+
+
+                        <span class="filter-left">
+
+
+                            <span
+                                class="filter-arrow"
+                            >
+                                ▶
+                            </span>
+
+
+                            <span>
+                                Sinh viên đạt yêu cầu hiện tại
+                            </span>
+
+
+                        </span>
+
+
+                        <span
+                            class="filter-count"
+                        >
+                            <%= thongKe.datHienTai %>
+                        </span>
+
+
+                    </button>
+
+
+                    <div
+                        class="panel-slot"
+                    >
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+
+            <!-- ==================================================
+                 PANEL DÙNG CHUNG
+                 JS SẼ DI CHUYỂN PANEL NÀY
+                 ĐẾN NGAY DƯỚI THANH ĐƯỢC BẤM
+            ================================================== -->
+
+            <section
+                id="studentPanel"
+                class="student-panel"
+            >
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+
+                        <div
+                            id="panelTitle"
+                            class="panel-title"
+                        >
+                        </div>
+
+
+                        <div
+                            id="panelDescription"
+                            class="panel-description"
+                        >
+
+                            Hiển thị tối đa
+                            10 sinh viên mỗi trang.
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ==============================================
+                     TABLE
+                =============================================== -->
+
+                <div
+                    id="tableWrapper"
+                    class="table-wrapper"
+                >
+
+
+                    <table class="student-table">
+
+
+                        <thead>
+
+
+                            <tr>
+
+
+                                <th>
+                                    Mã sinh viên
+                                </th>
+
+
+                                <th>
+                                    Họ và tên
+                                </th>
+
+
+                                <th>
+                                    Tiến độ
+                                </th>
+
+
+                                <th>
+                                    Môn chưa đạt
+                                </th>
+
+
+                                <th>
+                                    Cảnh báo
+                                </th>
+
+
+                                <th>
+                                    Trạng thái
+                                </th>
+
+
+                                <th>
+                                </th>
+
+
+                            </tr>
+
+
+                        </thead>
+
+
+                        <tbody
+                            id="studentTableBody"
+                        >
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+                <!-- ==============================================
+                     KHÔNG CÓ DỮ LIỆU
+                =============================================== -->
+
+                <div
+                    id="emptyMessage"
+                    class="empty-message"
+                >
+
+                    Không có sinh viên
+                    thuộc nhóm này.
+
+                </div>
+
+
+                <!-- ==============================================
+                     PHÂN TRANG
+                =============================================== -->
+
+                <div
+                    id="pagination"
+                    class="pagination"
+                >
+                </div>
+
+
+            </section>
+
+
+            <!-- ==================================================
+                 DỮ LIỆU JSON
+            ================================================== -->
+
+            <script
+                id="studentData"
+                type="application/json"
+            ><%- JSON.stringify(danhSachTheoDoi).replace(/</g, "\\u003c") %></script>
+
+
+            <!-- ==================================================
+                 SCRIPT
+            ================================================== -->
+
+            <script>
+
+                const danhSachSinhVien =
+                    JSON.parse(
+                        document
+                            .getElementById(
+                                "studentData"
+                            )
+                            .textContent
+                    );
+
+
+                const SO_SINH_VIEN_MOI_TRANG =
+                    10;
+
+
+                let boLocHienTai =
+                    null;
+
+
+                let trangHienTai =
+                    1;
+
+
+                let dangMo =
+                    false;
+
+
+                const studentPanel =
+                    document.getElementById(
+                        "studentPanel"
+                    );
+
+
+                const tableWrapper =
+                    document.getElementById(
+                        "tableWrapper"
+                    );
+
+
+                const tableBody =
+                    document.getElementById(
+                        "studentTableBody"
+                    );
+
+
+                const pagination =
+                    document.getElementById(
+                        "pagination"
+                    );
+
+
+                const emptyMessage =
+                    document.getElementById(
+                        "emptyMessage"
+                    );
+
+
+                const panelTitle =
+                    document.getElementById(
+                        "panelTitle"
+                    );
+
+
+                const tenBoLoc = {
+
+                    TAT_CA:
+                        "Tất cả sinh viên",
+
+                    CANH_BAO:
+                        "Sinh viên có cảnh báo",
+
+                    CHUA_DAT:
+                        "Sinh viên có học phần chưa đạt",
+
+                    DAT:
+                        "Sinh viên đạt yêu cầu hiện tại"
+
+                };
+
+
+                // ==============================================
+                // ESCAPE HTML
+                // ==============================================
+
+                function escapeHtml(
+                    value
+                ) {
+
+                    return String(
+                        value ?? ""
+                    )
+                        .replace(
+                            /&/g,
+                            "&amp;"
+                        )
+                        .replace(
+                            /</g,
+                            "&lt;"
+                        )
+                        .replace(
+                            />/g,
+                            "&gt;"
+                        )
+                        .replace(
+                            /"/g,
+                            "&quot;"
+                        )
+                        .replace(
+                            /'/g,
+                            "&#039;"
+                        );
+                }
+
+
+                // ==============================================
+                // LỌC DỮ LIỆU
+                // ==============================================
+
+                function layDanhSachTheoBoLoc() {
+
+
+                    if (
+                        boLocHienTai ===
+                        "CANH_BAO"
+                    ) {
+
+                        return danhSachSinhVien.filter(
+                            item =>
+                                item.coCanhBao
+                        );
+                    }
+
+
+                    if (
+                        boLocHienTai ===
+                        "CHUA_DAT"
+                    ) {
+
+                        return danhSachSinhVien.filter(
+                            item =>
+                                item.coMonChuaDat
+                        );
+                    }
+
+
+                    if (
+                        boLocHienTai ===
+                        "DAT"
+                    ) {
+
+                        return danhSachSinhVien.filter(
+                            item =>
+                                item.datHienTai
+                        );
+                    }
+
+
+                    return danhSachSinhVien;
+                }
+
+
+                // ==============================================
+                // BADGE TRẠNG THÁI
+                // ==============================================
+
+                function taoBadgeTrangThai(
+                    item
+                ) {
+
+
+                    if (
+                        item.dataStatus !==
+                        "VALID"
+                    ) {
+
+                        return `
+                            <span
+                                class="
+                                    badge
+                                    badge-neutral
+                                "
+                            >
+                                Chưa đủ dữ liệu
+                            </span>
+                        `;
+                    }
+
+
+                    if (
+                        item.datHienTai
+                    ) {
+
+                        return `
+                            <span
+                                class="
+                                    badge
+                                    badge-success
+                                "
+                            >
+                                Đạt hiện tại
+                            </span>
+                        `;
+                    }
+
+
+                    if (
+                        item.coMonChuaDat
+                    ) {
+
+                        return `
+                            <span
+                                class="
+                                    badge
+                                    badge-danger
+                                "
+                            >
+                                Có môn chưa đạt
+                            </span>
+                        `;
+                    }
+
+
+                    if (
+                        item.coCanhBao
+                    ) {
+
+                        return `
+                            <span
+                                class="
+                                    badge
+                                    badge-warning
+                                "
+                            >
+                                Có cảnh báo
+                            </span>
+                        `;
+                    }
+
+
+                    return `
+                        <span
+                            class="
+                                badge
+                                badge-neutral
+                            "
+                        >
+                            Đang theo dõi
+                        </span>
+                    `;
+                }
+
+
+                // ==============================================
+                // RENDER BẢNG
+                // ==============================================
+
+                function renderBang() {
+
+
+                    if (
+                        !boLocHienTai
+                    ) {
+
+                        return;
+                    }
+
+
+                    const danhSach =
+                        layDanhSachTheoBoLoc();
+
+
+                    const tongTrang =
+                        Math.max(
+                            1,
+
+                            Math.ceil(
+                                danhSach.length /
+                                SO_SINH_VIEN_MOI_TRANG
+                            )
+                        );
+
+
+                    if (
+                        trangHienTai >
+                        tongTrang
+                    ) {
+
+                        trangHienTai =
+                            tongTrang;
+                    }
+
+
+                    const batDau =
+                        (
+                            trangHienTai -
+                            1
+                        ) *
+                        SO_SINH_VIEN_MOI_TRANG;
+
+
+                    const ketThuc =
+                        batDau +
+                        SO_SINH_VIEN_MOI_TRANG;
+
+
+                    const danhSachTrang =
+                        danhSach.slice(
+                            batDau,
+                            ketThuc
+                        );
+
+
+                    panelTitle.textContent =
+                        tenBoLoc[
+                            boLocHienTai
+                        ];
+
+
+                    // ==========================================
+                    // EMPTY
+                    // ==========================================
+
+                    if (
+                        danhSach.length ===
+                        0
+                    ) {
+
+
+                        tableWrapper.style.display =
+                            "none";
+
+
+                        emptyMessage.style.display =
+                            "block";
+
+
+                        pagination.innerHTML =
+                            "";
+
+
+                        return;
+                    }
+
+
+                    tableWrapper.style.display =
+                        "block";
+
+
+                    emptyMessage.style.display =
+                        "none";
+
+
+                    // ==========================================
+                    // ROW
+                    // ==========================================
+
+                    tableBody.innerHTML =
+                        danhSachTrang
+                            .map(
+                                item => {
+
+
+                                    const maSinhVien =
+                                        escapeHtml(
+                                            item.maSinhVien
+                                        );
+
+
+                                    const hoTen =
+                                        escapeHtml(
+                                            item.hoTen
+                                        );
+
+
+                                    const completionRate =
+                                        Number(
+                                            item.completionRate ||
+                                            0
+                                        );
+
+
+                                    const completedCredits =
+                                        Number(
+                                            item.completedCredits ||
+                                            0
+                                        );
+
+
+                                    const requiredCredits =
+                                        Number(
+                                            item.requiredCredits ||
+                                            140
+                                        );
+
+
+                                    return `
+
+                                        <tr>
+
+
+                                            <td
+                                                class="
+                                                    student-code
+                                                "
+                                            >
+
+                                                ${maSinhVien}
+
+                                            </td>
+
+
+                                            <td
+                                                class="
+                                                    student-name
+                                                "
+                                            >
+
+                                                ${hoTen}
+
+                                            </td>
+
+
+                                            <td>
+
+
+                                                <div
+                                                    class="
+                                                        progress-main
+                                                    "
+                                                >
+
+                                                    ${completionRate}%
+
+                                                </div>
+
+
+                                                <div
+                                                    class="
+                                                        progress-detail
+                                                    "
+                                                >
+
+                                                    ${completedCredits}
+
+                                                    /
+
+                                                    ${requiredCredits}
+
+                                                    tín
+
+                                                </div>
+
+
+                                            </td>
+
+
+                                            <td>
+
+
+                                                ${
+                                                    item.soMonChuaDat >
+                                                    0
+
+                                                        ?
+
+                                                        `
+                                                        <span
+                                                            class="
+                                                                badge
+                                                                badge-danger
+                                                            "
+                                                        >
+                                                            ${item.soMonChuaDat}
+                                                        </span>
+                                                        `
+
+                                                        :
+
+                                                        `
+                                                        <span
+                                                            class="
+                                                                badge
+                                                                badge-success
+                                                            "
+                                                        >
+                                                            0
+                                                        </span>
+                                                        `
+                                                }
+
+
+                                            </td>
+
+
+                                            <td>
+
+
+                                                ${
+                                                    item.soCanhBao >
+                                                    0
+
+                                                        ?
+
+                                                        `
+                                                        <span
+                                                            class="
+                                                                badge
+                                                                badge-warning
+                                                            "
+                                                        >
+                                                            ${item.soCanhBao}
+                                                        </span>
+                                                        `
+
+                                                        :
+
+                                                        `
+                                                        <span
+                                                            class="
+                                                                badge
+                                                                badge-success
+                                                            "
+                                                        >
+                                                            0
+                                                        </span>
+                                                        `
+                                                }
+
+
+                                            </td>
+
+
+                                            <td>
+
+                                                ${
+                                                    taoBadgeTrangThai(
+                                                        item
+                                                    )
+                                                }
+
+                                            </td>
+
+
+                                            <td>
+
+
+                                                <a
+                                                    class="
+                                                        view-button
+                                                    "
+                                                    href="/giangvien/sinhvien/${item.id}"
+                                                >
+                                                    Xem
+                                                </a>
+
+
+                                            </td>
+
+
+                                        </tr>
+
+                                    `;
+                                }
+                            )
+                            .join("");
+
+
+                    renderPhanTrang(
+                        tongTrang
+                    );
+                }
+
+
+                // ==============================================
+                // PHÂN TRANG
+                // ==============================================
+
+                function renderPhanTrang(
+                    tongTrang
+                ) {
+
+
+                    if (
+                        tongTrang <= 1
+                    ) {
+
+                        pagination.innerHTML =
+                            "";
+
+                        return;
+                    }
+
+
+                    let html =
+                        "";
+
+
+                    // ==========================================
+                    // PREVIOUS
+                    // ==========================================
+
+                    html += `
+
+                        <button
+                            type="button"
+                            class="page-button"
+                            data-page="${
+                                trangHienTai - 1
+                            }"
+                            ${
+                                trangHienTai ===
+                                1
+                                    ? "disabled"
+                                    : ""
+                            }
+                        >
+                            ‹
+                        </button>
+                    `;
+
+
+                    // ==========================================
+                    // NUMBER
+                    // ==========================================
+
+                    for (
+                        let i = 1;
+                        i <= tongTrang;
+                        i++
+                    ) {
+
+
+                        html += `
+
+                            <button
+                                type="button"
+                                class="
+                                    page-button
+                                    ${
+                                        i ===
+                                        trangHienTai
+
+                                            ? "active"
+
+                                            : ""
+                                    }
+                                "
+                                data-page="${i}"
+                            >
+                                ${i}
+                            </button>
+                        `;
+                    }
+
+
+                    // ==========================================
+                    // NEXT
+                    // ==========================================
+
+                    html += `
+
+                        <button
+                            type="button"
+                            class="page-button"
+                            data-page="${
+                                trangHienTai + 1
+                            }"
+                            ${
+                                trangHienTai ===
+                                tongTrang
+                                    ? "disabled"
+                                    : ""
+                            }
+                        >
+                            ›
+                        </button>
+                    `;
+
+
+                    pagination.innerHTML =
+                        html;
+
+
+                    // ==========================================
+                    // EVENT PAGE
+                    // ==========================================
+
+                    pagination
+                        .querySelectorAll(
+                            ".page-button"
+                        )
+                        .forEach(
+                            button => {
+
+
+                                button.addEventListener(
+                                    "click",
+
+                                    function () {
+
+
+                                        if (
+                                            button.disabled
+                                        ) {
+
+                                            return;
+                                        }
+
+
+                                        trangHienTai =
+                                            Number(
+                                                button.dataset.page
+                                            );
+
+
+                                        renderBang();
+
+                                    }
+                                );
+
+                            }
+                        );
+                }
+
+
+                // ==============================================
+                // RESET THANH LỌC
+                // ==============================================
+
+                function resetFilterBars() {
+
+
+                    document
+                        .querySelectorAll(
+                            ".filter-bar"
+                        )
+                        .forEach(
+                            button => {
+
+
+                                button
+                                    .classList
+                                    .remove(
+                                        "active"
+                                    );
+
+
+                                const arrow =
+                                    button
+                                        .querySelector(
+                                            ".filter-arrow"
+                                        );
+
+
+                                if (arrow) {
+
+                                    arrow.textContent =
+                                        "▶";
+                                }
+
+                            }
+                        );
+                }
+
+
+                // ==============================================
+                // ĐÓNG PANEL
+                // ==============================================
+
+                function dongPanel() {
+
+
+                    dangMo =
+                        false;
+
+
+                    boLocHienTai =
+                        null;
+
+
+                    trangHienTai =
+                        1;
+
+
+                    studentPanel
+                        .classList
+                        .remove(
+                            "open"
+                        );
+
+
+                    resetFilterBars();
+                }
+
+
+                // ==============================================
+                // MỞ PANEL
+                // ==============================================
+
+                function moPanel(
+                    button
+                ) {
+
+
+                    const boLoc =
+                        button.dataset.filter;
+
+
+                    // ==========================================
+                    // BẤM LẠI ĐÚNG THANH ĐANG MỞ
+                    // => ĐÓNG
+                    // ==========================================
+
+                    if (
+                        dangMo &&
+                        boLocHienTai ===
+                        boLoc
+                    ) {
+
+                        dongPanel();
+
+                        return;
+                    }
+
+
+                    boLocHienTai =
+                        boLoc;
+
+
+                    trangHienTai =
+                        1;
+
+
+                    dangMo =
+                        true;
+
+
+                    resetFilterBars();
+
+
+                    // ==========================================
+                    // ACTIVE THANH ĐANG CHỌN
+                    // ==========================================
+
+                    button
+                        .classList
+                        .add(
+                            "active"
+                        );
+
+
+                    const arrow =
+                        button
+                            .querySelector(
+                                ".filter-arrow"
+                            );
+
+
+                    if (arrow) {
+
+                        arrow.textContent =
+                            "▼";
+                    }
+
+
+                    // ==========================================
+                    // TÌM SLOT NGAY DƯỚI THANH
+                    // ==========================================
+
+                    const section =
+                        button.closest(
+                            ".filter-section"
+                        );
+
+
+                    const slot =
+                        section.querySelector(
+                            ".panel-slot"
+                        );
+
+
+                    // ==========================================
+                    // CHUYỂN PANEL VÀO SLOT
+                    // ==========================================
+
+                    slot.appendChild(
+                        studentPanel
+                    );
+
+
+                    studentPanel
+                        .classList
+                        .add(
+                            "open"
+                        );
+
+
+                    renderBang();
+                }
+
+
+                // ==============================================
+                // EVENT THANH LỌC
+                // ==============================================
+
+                document
+                    .querySelectorAll(
+                        ".filter-bar"
+                    )
+                    .forEach(
+                        button => {
+
+
+                            button.addEventListener(
+                                "click",
+
+                                function () {
+
+                                    moPanel(
+                                        button
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                // ==============================================
+                // BAN ĐẦU ĐÓNG TẤT CẢ
+                // ==============================================
+
+                dongPanel();
+
+            </script>
+
+
+        <% } %>
+
+
+    </main>
+
+
+</body>
+
+</html>

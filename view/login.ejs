@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Đăng nhập hệ thống
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+</head>
+
+
+<body class="login-page">
+
+
+    <main class="login-container">
+
+
+        <div class="login-card">
+
+
+            <!-- =================================================
+                 TIÊU ĐỀ
+            ================================================== -->
+
+            <div class="login-header">
+
+                <h1>
+                    Theo dõi tiến độ học tập
+                </h1>
+
+                <p>
+                    Đăng nhập để sử dụng hệ thống
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 THÔNG BÁO LỖI
+            ================================================== -->
+
+            <% if (error) { %>
+
+                <div class="login-error">
+
+                    <%= error %>
+
+                </div>
+
+            <% } %>
+
+
+            <!-- =================================================
+                 FORM ĐĂNG NHẬP
+            ================================================== -->
+
+            <form
+                action="/login"
+                method="POST"
+                class="login-form"
+            >
+
+
+                <!-- TÊN ĐĂNG NHẬP -->
+
+                <div class="form-group">
+
+                    <label for="tenDangNhap">
+
+                        Tên đăng nhập
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="tenDangNhap"
+                        name="tenDangNhap"
+                        placeholder="Nhập tên đăng nhập"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- MẬT KHẨU -->
+
+                <div class="form-group">
+
+                    <label for="matKhau">
+
+                        Mật khẩu
+
+                    </label>
+
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="matKhau"
+                            name="matKhau"
+                            placeholder="Nhập mật khẩu"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="show-password-button"
+                            id="showPasswordButton"
+                        >
+                            Hiện
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NÚT ĐĂNG NHẬP -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    Đăng nhập
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 GHI CHÚ
+            ================================================== -->
+
+            <div class="login-note">
+
+                Hệ thống hỗ trợ sinh viên và GVCN theo dõi
+                tiến độ học tập dựa trên dữ liệu hiện có.
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         HIỆN / ẨN MẬT KHẨU
+    ====================================================== -->
+
+    <script>
+
+        const passwordInput =
+            document.getElementById(
+                "matKhau"
+            );
+
+
+        const showPasswordButton =
+            document.getElementById(
+                "showPasswordButton"
+            );
+
+
+        showPasswordButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    passwordInput.type ===
+                    "password"
+                ) {
+
+                    passwordInput.type =
+                        "text";
+
+                    showPasswordButton.textContent =
+                        "Ẩn";
+
+                } else {
+
+                    passwordInput.type =
+                        "password";
+
+                    showPasswordButton.textContent =
+                        "Hiện";
+                }
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

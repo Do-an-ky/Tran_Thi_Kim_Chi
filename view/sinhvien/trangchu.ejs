@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Theo dõi tiến độ học tập
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+</head>
+
+
+<body class="student-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="student-header">
+
+        <div class="student-header-inner">
+
+            <div class="header-title">
+
+                <h1>
+                    Theo dõi tiến độ học tập
+                </h1>
+
+                <p>
+                    Thông tin tiến độ và cảnh báo dựa trên dữ liệu hiện có
+                </p>
+
+            </div>
+
+
+            <a
+                href="/logout"
+                class="logout-button"
+            >
+                Đăng xuất
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="student-container">
+
+
+        <!-- =================================================
+             THÔNG TIN SINH VIÊN
+        ================================================== -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2 class="card-title">
+                    Thông tin sinh viên
+                </h2>
+
+            </div>
+
+
+            <div class="student-info-grid">
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Mã sinh viên
+                    </span>
+
+                    <span class="info-value">
+                        <%= sinhVien.maSinhVien %>
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Họ và tên
+                    </span>
+
+                    <span class="info-value">
+                        <%= sinhVien.hoTen %>
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Lớp
+                    </span>
+
+                    <span class="info-value">
+                        <%= sinhVien.maLop %>
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Ngành
+                    </span>
+
+                    <span class="info-value">
+                        <%= sinhVien.nganh %>
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Chương trình đào tạo
+                    </span>
+
+                    <span class="info-value">
+
+                        <% if (sinhVien.chuongTrinhDaoTao) { %>
+
+                            <%= sinhVien.chuongTrinhDaoTao.tenChuongTrinh %>
+
+                        <% } else { %>
+
+                            Chưa được gán
+
+                        <% } %>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             KIỂM TRA TRẠNG THÁI DỮ LIỆU
+        ================================================== -->
+
+        <% if (!progress || progress.dataStatus !== "VALID") { %>
+
+
+            <section class="card">
+
+                <div class="notice notice-error">
+
+                    <strong>
+                        Chưa thể tính tiến độ
+                    </strong>
+
+                    <div>
+
+                        <% if (progress && progress.message) { %>
+
+                            <%= progress.message %>
+
+                        <% } else { %>
+
+                            Dữ liệu hiện tại chưa đủ để tính tiến độ.
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        <% } else { %>
+
+
+            <!-- =================================================
+                 TỔNG QUAN
+            ================================================== -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Tổng quan tiến độ
+                    </h2>
+
+                    <p class="card-description">
+                        Tín chỉ đã hoàn thành được tính theo dữ liệu
+                        chương trình đào tạo và kết quả học tập hiện có.
+                    </p>
+
+                </div>
+
+
+                <div class="credit-summary">
+
+                    Đã hoàn thành
+
+                    <strong>
+                        <%= progress.completedCredits %>
+                    </strong>
+
+                    /
+
+                    <strong>
+                        <%= progress.requiredCredits %>
+                    </strong>
+
+                    tín chỉ
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-value"
+                        data-progress="<%= progress.completionRate || 0 %>"
+                    >
+
+                        <%= progress.completionRate || 0 %>%
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-value">
+                            <%= progress.completedCredits %>
+                        </div>
+
+                        <div class="stat-label">
+                            Tín chỉ tính tiến độ
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-value">
+                            <%= progress.requiredCredits %>
+                        </div>
+
+                        <div class="stat-label">
+                            Tín chỉ yêu cầu
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-value">
+                            <%= progress.completionRate %>%
+                        </div>
+
+                        <div class="stat-label">
+                            Tiến độ hiện tại
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-value">
+
+                            <%= progress.missingRequiredCourses
+                                ? progress.missingRequiredCourses.length
+                                : 0
+                            %>
+
+                        </div>
+
+                        <div class="stat-label">
+                            Học phần bắt buộc còn thiếu
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <% if (
+                    progress.rawCompletedCredits !== undefined &&
+                    progress.rawCompletedCredits !== null
+                ) { %>
+
+                    <div class="detail-row">
+
+                        <span class="muted">
+                            Tổng tín chỉ DAT có trong dữ liệu:
+                        </span>
+
+                        <strong>
+                            <%= progress.rawCompletedCredits %>
+                        </strong>
+
+                    </div>
+
+                <% } %>
+
+            </section>
+
+
+            <!-- =================================================
+                 NHÓM TỰ CHỌN
+            ================================================== -->
+
+            <% if (progress.electiveProgress) { %>
+
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <h2 class="card-title">
+                            Nhóm học phần tự chọn
+                        </h2>
+
+                        <p class="card-description">
+                            Sinh viên được chọn 3 trong 6 học phần.
+                            Các môn còn lại không được xem là môn bắt buộc còn thiếu.
+                        </p>
+
+                    </div>
+
+
+                    <div class="stat-grid">
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <%= progress.electiveProgress.passedCourseCount %>
+                                /
+                                <%= progress.electiveProgress.requiredCourseCount %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Số môn đã đạt / yêu cầu
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <%= progress.electiveProgress.countedCredits %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Tín chỉ được tính
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <% if (progress.electiveProgress.completed) { %>
+
+                                    Đủ
+
+                                <% } else { %>
+
+                                    Chưa đủ
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Trạng thái nhóm
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Mã môn</th>
+
+                                    <th>Tên học phần</th>
+
+                                    <th>Tín chỉ</th>
+
+                                    <th>Trạng thái</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <%
+                                    const electiveCourses =
+                                        progress.courseProgress.filter(
+                                            item =>
+                                                item.loaiHocPhan === "TU_CHON"
+                                        );
+                                %>
+
+
+                                <% electiveCourses.forEach(item => { %>
+
+                                    <tr>
+
+                                        <td class="course-code">
+                                            <%= item.hocPhan.maHocPhan %>
+                                        </td>
+
+                                        <td>
+                                            <%= item.hocPhan.tenHocPhan %>
+                                        </td>
+
+                                        <td>
+                                            <%= item.hocPhan.soTinChi %>
+                                        </td>
+
+                                        <td>
+
+                                            <% if (item.status === "DAT") { %>
+
+                                                <span class="badge badge-dat">
+                                                    Đạt
+                                                </span>
+
+                                            <% } else if (item.status === "CHUA_DAT") { %>
+
+                                                <span class="badge badge-chua-dat">
+                                                    Chưa đạt
+                                                </span>
+
+                                            <% } else { %>
+
+                                                <span class="badge badge-chua-hoc">
+                                                    Chưa học
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+            <% } %>
+
+
+            <!-- =================================================
+                 ĐỒ ÁN / THAY THẾ
+            ================================================== -->
+
+            <% if (progress.finalProjectProgress) { %>
+
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <h2 class="card-title">
+                            Đồ án tốt nghiệp / học phần thay thế
+                        </h2>
+
+                        <p class="card-description">
+                            Hệ thống theo dõi phương án Đồ án tốt nghiệp
+                            hoặc các học phần thay thế với tối đa 10 tín chỉ.
+                        </p>
+
+                    </div>
+
+
+                    <div class="stat-grid">
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <%= progress.finalProjectProgress.countedCredits %>
+                                /
+                                <%= progress.finalProjectProgress.requiredCredits %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Tín chỉ đã tính / yêu cầu
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <% if (progress.finalProjectProgress.completed) { %>
+
+                                    Đủ
+
+                                <% } else { %>
+
+                                    Chưa đủ
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Trạng thái
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+
+                                <% if (
+                                    progress.finalProjectProgress.method ===
+                                    "DO_AN_TOT_NGHIEP"
+                                ) { %>
+
+                                    Đồ án
+
+                                <% } else if (
+                                    progress.finalProjectProgress.method ===
+                                    "THAY_THE_DO_AN"
+                                ) { %>
+
+                                    Thay thế
+
+                                <% } else { %>
+
+                                    Chưa chọn
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="stat-label">
+                                Phương án hiện tại
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Trạng thái Đồ án tốt nghiệp:
+                        </span>
+
+                        <% if (
+                            progress.finalProjectProgress.doAnStatus === "DAT"
+                        ) { %>
+
+                            <span class="badge badge-dat">
+                                Đạt
+                            </span>
+
+                        <% } else if (
+                            progress.finalProjectProgress.doAnStatus === "CHUA_DAT"
+                        ) { %>
+
+                            <span class="badge badge-chua-dat">
+                                Chưa đạt
+                            </span>
+
+                        <% } else { %>
+
+                            <span class="badge badge-chua-hoc">
+                                Chưa học
+                            </span>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Tín chỉ môn thay thế đã đạt:
+                        </span>
+
+                        <strong>
+                            <%= progress.finalProjectProgress.replacementPassedCredits %>
+                        </strong>
+
+                    </div>
+
+
+                    <% if (
+                        progress.finalProjectProgress.replacementCourses &&
+                        progress.finalProjectProgress.replacementCourses.length > 0
+                    ) { %>
+
+
+                        <div class="table-wrapper">
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Mã môn</th>
+
+                                        <th>Môn thay thế đã đạt</th>
+
+                                        <th>Tín chỉ</th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    <% progress.finalProjectProgress.replacementCourses.forEach(item => { %>
+
+                                        <tr>
+
+                                            <td class="course-code">
+                                                <%= item.hocPhan.maHocPhan %>
+                                            </td>
+
+                                            <td>
+                                                <%= item.hocPhan.tenHocPhan %>
+                                            </td>
+
+                                            <td>
+                                                <%= item.hocPhan.soTinChi %>
+                                            </td>
+
+                                        </tr>
+
+                                    <% }) %>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                    <% } %>
+
+                </section>
+
+
+            <% } %>
+
+
+            <!-- =================================================
+                 CẢNH BÁO
+            ================================================== -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Cảnh báo học tập
+                    </h2>
+
+                    <p class="card-description">
+                        Cảnh báo được tạo từ dữ liệu hiện có và chỉ có giá trị hỗ trợ theo dõi.
+                    </p>
+
+                </div>
+
+
+                <% if (!warnings || warnings.length === 0) { %>
+
+
+                    <div class="notice notice-success">
+
+                        Hiện tại không có cảnh báo.
+
+                    </div>
+
+
+                <% } else { %>
+
+
+                    <div class="stat-grid">
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+                                <%= warningSummary.total %>
+                            </div>
+
+                            <div class="stat-label">
+                                Tổng cảnh báo
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+                                <%= warningSummary.requiredNotStudied %>
+                            </div>
+
+                            <div class="stat-label">
+                                Bắt buộc chưa học
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+                                <%= warningSummary.requiredNotPassed %>
+                            </div>
+
+                            <div class="stat-label">
+                                Bắt buộc chưa đạt
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-value">
+                                <%= warningSummary.prerequisiteNotMet %>
+                            </div>
+
+                            <div class="stat-label">
+                                Chưa thỏa tiên quyết
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="warning-list">
+
+                        <% warnings.forEach(warning => { %>
+
+
+                            <div class="warning-item">
+
+                                <% if (warning.hocPhan) { %>
+
+                                    <span class="warning-code">
+
+                                        <%= warning.hocPhan.maHocPhan %>
+
+                                    </span>
+
+                                    -
+
+                                <% } %>
+
+                                <%= warning.message %>
+
+                            </div>
+
+
+                        <% }) %>
+
+                    </div>
+
+
+                <% } %>
+
+            </section>
+
+
+            <!-- =================================================
+                 MÔN BẮT BUỘC CÒN THIẾU
+            ================================================== -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Học phần bắt buộc còn thiếu
+                    </h2>
+
+                    <p class="card-description">
+                        Chỉ hiển thị học phần được xác định là bắt buộc
+                        và hiện đang chưa học hoặc chưa đạt.
+                    </p>
+
+                </div>
+
+
+                <% if (
+                    !progress.missingRequiredCourses ||
+                    progress.missingRequiredCourses.length === 0
+                ) { %>
+
+
+                    <div class="notice notice-success">
+
+                        Không có học phần bắt buộc còn thiếu.
+
+                    </div>
+
+
+                <% } else { %>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Mã môn</th>
+
+                                    <th>Tên học phần</th>
+
+                                    <th>Tín chỉ</th>
+
+                                    <th>Trạng thái</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% progress.missingRequiredCourses.forEach(item => { %>
+
+
+                                    <tr>
+
+                                        <td class="course-code">
+                                            <%= item.hocPhan.maHocPhan %>
+                                        </td>
+
+                                        <td>
+                                            <%= item.hocPhan.tenHocPhan %>
+                                        </td>
+
+                                        <td>
+                                            <%= item.hocPhan.soTinChi %>
+                                        </td>
+
+                                        <td>
+
+                                            <% if (item.status === "CHUA_DAT") { %>
+
+                                                <span class="badge badge-chua-dat">
+                                                    Chưa đạt
+                                                </span>
+
+                                            <% } else { %>
+
+                                                <span class="badge badge-chua-hoc">
+                                                    Chưa học
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                <% } %>
+
+            </section>
+
+
+            <!-- =================================================
+                 TOÀN BỘ HỌC PHẦN
+            ================================================== -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Chi tiết chương trình đào tạo
+                    </h2>
+
+                    <p class="card-description">
+                        Trạng thái từng học phần được tổng hợp từ lịch sử kết quả học tập.
+                    </p>
+
+                </div>
+
+
+                <% if (
+                    !progress.courseProgress ||
+                    progress.courseProgress.length === 0
+                ) { %>
+
+
+                    <div class="empty-message">
+                        Chưa có dữ liệu học phần.
+                    </div>
+
+
+                <% } else { %>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Mã môn</th>
+
+                                    <th>Tên học phần</th>
+
+                                    <th>TC</th>
+
+                                    <th>Loại</th>
+
+                                    <th>Kết quả học tập</th>
+
+                                    <th>Trạng thái</th>
+
+                                    <th>Số lần học</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% progress.courseProgress.forEach(item => { %>
+
+                                    <%
+                                        const ketQuaCuaMon = (results || []).filter(result =>
+                                            result.hocPhan &&
+                                            String(result.hocPhan._id) === String(item.hocPhan._id)
+                                        );
+
+                                        let ketQuaHienThi = null;
+
+                                        if (ketQuaCuaMon.length > 0) {
+                                            if (item.status === "DAT") {
+                                                ketQuaHienThi = [...ketQuaCuaMon]
+                                                    .reverse()
+                                                    .find(result => result.trangThai === "DAT") ||
+                                                    ketQuaCuaMon[ketQuaCuaMon.length - 1];
+                                            } else {
+                                                ketQuaHienThi =
+                                                    ketQuaCuaMon[ketQuaCuaMon.length - 1];
+                                            }
+                                        }
+                                    %>
+
+
+                                    <tr>
+
+                                        <td class="course-code">
+                                            <%= item.hocPhan.maHocPhan %>
+                                        </td>
+
+
+                                        <td>
+                                            <%= item.hocPhan.tenHocPhan %>
+                                        </td>
+
+
+                                        <td>
+                                            <%= item.hocPhan.soTinChi %>
+                                        </td>
+
+
+                                        <td>
+
+                                            <% if (
+                                                item.loaiHocPhan === "BAT_BUOC"
+                                            ) { %>
+
+                                                <span class="badge badge-bat-buoc">
+                                                    Bắt buộc
+                                                </span>
+
+
+                                            <% } else if (
+                                                item.loaiHocPhan === "TU_CHON"
+                                            ) { %>
+
+                                                <span class="badge badge-tu-chon">
+                                                    Tự chọn
+                                                </span>
+
+
+                                            <% } else if (
+                                                item.loaiHocPhan === "DO_AN_TOT_NGHIEP"
+                                            ) { %>
+
+                                                <span class="badge badge-do-an">
+                                                    Đồ án tốt nghiệp
+                                                </span>
+
+
+                                            <% } else if (
+                                                item.loaiHocPhan === "THAY_THE_DO_AN"
+                                            ) { %>
+
+                                                <span class="badge badge-thay-the">
+                                                    Thay thế đồ án
+                                                </span>
+
+
+                                            <% } else { %>
+
+                                                <span class="badge badge-khac">
+                                                    Khác
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <% if (
+                                                ketQuaHienThi &&
+                                                ketQuaHienThi.diem !== null &&
+                                                ketQuaHienThi.diem !== undefined
+                                            ) { %>
+
+                                                <strong>
+                                                    <%= Number(ketQuaHienThi.diem).toFixed(1) %>
+                                                </strong>
+
+                                            <% } else { %>
+
+                                                -
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <% if (item.status === "DAT") { %>
+
+                                                <span class="badge badge-dat">
+                                                    Đạt
+                                                </span>
+
+
+                                            <% } else if (
+                                                item.status === "CHUA_DAT"
+                                            ) { %>
+
+                                                <span class="badge badge-chua-dat">
+                                                    Chưa đạt
+                                                </span>
+
+
+                                            <% } else { %>
+
+                                                <span class="badge badge-chua-hoc">
+                                                    Chưa học
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <td>
+                                            <%= item.soLanHoc %>
+                                        </td>
+
+                                    </tr>
+
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                <% } %>
+
+            </section>
+
+
+        <% } %>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         PROGRESS BAR SCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document
+            .querySelectorAll(".progress-value")
+            .forEach(function (element) {
+
+                let value =
+                    Number(
+                        element.dataset.progress || 0
+                    );
+
+
+                if (
+                    Number.isNaN(value)
+                ) {
+                    value = 0;
+                }
+
+
+                if (value < 0) {
+                    value = 0;
+                }
+
+
+                if (value > 100) {
+                    value = 100;
+                }
+
+
+                element.style.width =
+                    value + "%";
+            });
+
+    </script>
+
+
+</body>
+
+</html>
